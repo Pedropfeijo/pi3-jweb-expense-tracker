@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Entry</title>
+    <link rel="stylesheet" href="static/css/Style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Submit New Entry</h2>
+        <form id="entryForm">
+            <label for="category">Category:</label>
+            <input type="text" id="category" required>
+            
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" required>
+            
+            <label for="type">Type:</label>
+            <select id="type">
+                <option value="earning">Earning</option>
+                <option value="loss">Loss</option>
+            </select>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
