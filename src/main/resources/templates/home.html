@@ -1,37 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <link rel="stylesheet" href="static/css/Style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="script.js"></script>
+  </head>
+  <body>
     <div class="container">
-        <h2>Earnings & Losses</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Type</th>
-                </tr>
-            </thead>
-            <tbody id="dataTable">
-                <tr class="earning">
-                    <td>Salary</td>
-                    <td>$3000</td>
-                    <td>Earning</td>
-                </tr>
-                <tr class="loss">
-                    <td>Rent</td>
-                    <td>$1200</td>
-                    <td>Loss</td>
-                </tr>
-            </tbody>
-        </table>
-        <button onclick="window.location.href='cadastroLancamento.html'">Add New Entry</button>
+        <div class="button-container-start">
+            <button onclick="window.location.href='home.html'">
+              &larr; Retorne ao Login
+            </button>
+        </div>
+      <h2>Lucros e Despesas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Lucro</th>
+            <th>Despesa</th>
+          </tr>
+        </thead>
+        <tbody id="tableLancamentos">
+          <tr class="lucro">
+            <td>Salário</td>
+            <td>$3000</td>
+            <td>Sim</td>
+            <td>Não</td>
+            <td>
+              <a href="deletar" class="entry-buttons" id="deleteEntry"
+                >deletar</a
+              >
+            </td>
+            <td>
+              <a href="alterar" class="entry-buttons" id="deleteEntry"
+                >alterar</a
+              >
+            </td>
+          </tr>
+          <tr class="despesa">
+            <td>Aluguel</td>
+            <td>$1200</td>
+            <td>Não</td>
+            <td>Sim</td>
+            <td>
+              <a href="deletar" class="entry-buttons" id="deleteEntry"
+                >deletar</a
+              >
+            </td>
+            <td>
+              <a href="alterar" class="entry-buttons" id="deleteEntry"
+                >alterar</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p><strong>Total Lucro:</strong> <span id="totalLucro">$3000</span></p>
+      <p>
+        <strong>Total Despesa:</strong> <span id="totalDespesa">$1200</span>
+      </p>
+      <button onclick="window.location.href='cadastroLancamento.html'">
+        NOVO LANÇAMENTO
+      </button>
     </div>
-</body>
-</html>
 
+    <script>
+      /* function updateTotals() {
+            let earnings = 0, losses = 0;
+            document.querySelectorAll('#dataTable tr').forEach(row => {
+                const amount = parseFloat(row.children[1]?.innerText.replace('$', '')) || 0;
+                if (row.classList.contains('earning')) earnings += amount;
+                if (row.classList.contains('loss')) losses += amount;
+            });
+            document.getElementById('totalEarnings').innerText = `$${earnings}`;
+            document.getElementById('totalLosses').innerText = `$${losses}`;
+        }
+        updateTotals(); */
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

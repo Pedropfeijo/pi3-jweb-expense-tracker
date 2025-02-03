@@ -1,30 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Entry</title>
-    <link rel="stylesheet" href="static/css/Style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <h2>Submit New Entry</h2>
-        <form id="entryForm">
-            <label for="category">Category:</label>
-            <input type="text" id="category" required>
-            
-            <label for="amount">Amount:</label>
-            <input type="number" id="amount" required>
-            
-            <label for="type">Type:</label>
-            <select id="type">
-                <option value="earning">Earning</option>
-                <option value="loss">Loss</option>
-            </select>
-            
-            <button type="submit">Submit</button>
-        </form>
+      <h2>Detalhes do Lançamento</h2>
+      <form id="entryForm">
+        <div class="input-group">
+          <label for="valor">Valor:</label>
+          <input type="number" id="valor" required />
+        </div>
+        <div class="input-group">
+          <fieldset>
+            <legend>Tipo:</legend>
+            <label
+              ><input
+                type="radio"
+                name="tipo"
+                value="lucro"
+                id="radioLucro"
+                onclick="onLoad();"
+                required
+              />
+              Lucro</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="tipo"
+                value="despesa"
+                id="radioDespesa"
+                onclick="onLoad2();"
+                required
+              />
+              Despesa</label
+            >
+          </fieldset>
+        </div>
+        <div class="input-group-hide" id="group1">
+          <select id="type">
+            <option value="salario">Salário</option>
+            <option value="dividendos">Dividendos</option>
+          </select>
+        </div>
+        <div class="input-group-hide" id="group2">
+          <select id="type">
+            <option value="aluguel">Aluguel</option>
+            <option value="seguro">Seguro</option>
+            <option value="planodesaude">Plano de Saúde</option>
+            <option value="imposto">Imposto</option>
+            <option value="mercado">Mercado</option>
+          </select>
+        </div>
+        <div class="button-container-end">
+          <button type="submit">Salvar</button>
+        </div>
+      </form>
+      <div class="button-container-start">
+      <button onclick="window.location.href='home.html'">
+        &larr; Retorne ao Home
+      </button>
     </div>
+    </div>
+    <script>
+      function onLoad() {
+        //method for button times
+        var group1 = document.getElementById("group1");
+        group1.classList.remove("hide");
+        group1.classList.add("show");
+
+        var group2 = document.getElementById("group2");
+        group2.classList.remove("show");
+        group2.classList.add("hide");
+      }
+
+      function onLoad2() {
+        //method for button times
+        var group2 = document.getElementById("group2");
+        group2.classList.remove("hide");
+        group2.classList.add("show");
+
+        var group1 = document.getElementById("group1");
+        group1.classList.remove("show");
+        group1.classList.add("hide");
+      }
+    </script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
