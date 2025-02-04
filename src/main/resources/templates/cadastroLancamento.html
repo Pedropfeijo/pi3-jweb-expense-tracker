@@ -1,94 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Entry</title>
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h2>Detalhes do Lançamento</h2>
-      <form id="entryForm">
-        <div class="input-group">
-          <label for="valor">Valor:</label>
-          <input type="number" id="valor" required />
-        </div>
-        <div class="input-group">
-          <fieldset>
-            <legend>Tipo:</legend>
-            <label
-              ><input
-                type="radio"
-                name="tipo"
-                value="lucro"
-                id="radioLucro"
-                onclick="onLoad();"
-                required
-              />
-              Lucro</label
-            >
-            <label
-              ><input
-                type="radio"
-                name="tipo"
-                value="despesa"
-                id="radioDespesa"
-                onclick="onLoad2();"
-                required
-              />
-              Despesa</label
-            >
-          </fieldset>
-        </div>
-        <div class="input-group-hide" id="group1">
-          <select id="type">
-            <option value="salario">Salário</option>
-            <option value="dividendos">Dividendos</option>
-          </select>
-        </div>
-        <div class="input-group-hide" id="group2">
-          <select id="type">
-            <option value="aluguel">Aluguel</option>
-            <option value="seguro">Seguro</option>
-            <option value="planodesaude">Plano de Saúde</option>
-            <option value="imposto">Imposto</option>
-            <option value="mercado">Mercado</option>
-          </select>
-        </div>
-        <div class="button-container-end">
-          <button type="submit">Salvar</button>
-        </div>
-      </form>
-      <div class="button-container-start">
-      <button onclick="window.location.href='home.html'">
-        &larr; Retorne ao Home
-      </button>
-    </div>
-    </div>
-    <script>
-      function onLoad() {
-        //method for button times
-        var group1 = document.getElementById("group1");
-        group1.classList.remove("hide");
-        group1.classList.add("show");
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Novo Lançamento</title>
+        <link rel="stylesheet" href="css/styles.css" />
+    </head>
+    <body>
 
-        var group2 = document.getElementById("group2");
-        group2.classList.remove("show");
-        group2.classList.add("hide");
-      }
+        <h3>Adicione novo tipo de receita</h3>
 
-      function onLoad2() {
-        //method for button times
-        var group2 = document.getElementById("group2");
-        group2.classList.remove("hide");
-        group2.classList.add("show");
+        <form id="formReceita" th:action="@{/adicionarTipoReceita}" method="post">
+            <input type="text" id="receitaDescricao" placeholder="Descrição da receita aqui" required>
+            <button type="submit">Adicionar</button>
+        </form>
 
-        var group1 = document.getElementById("group1");
-        group1.classList.remove("show");
-        group1.classList.add("hide");
-      }
-    </script>
-    <script src="script.js"></script>
-  </body>
+
+        <h3>Adicione novo tipo de despesa</h3>
+
+        <form id="formDespesa" th:action="@{/adicionarTipoDespesa}" method="post">
+            <input type="text" id="despesaDescricao" placeholder="Descrição da despesa aqui" required>
+            <button type="submit">Adicionar</button>
+        </form>
+        <div class="container">
+            <h2>Detalhes do Lançamento</h2>
+            <form id="entryForm" th:action="@{/salvarLancamento}" method="post">
+                <div class="input-group">
+                    <label for="valor">Valor:</label>
+                    <input type="number" id="valor" name="valor" required />
+                </div>
+                <div class="input-group">
+                    <label for="tipo">Tipo:</label>
+                    <select id="tipo" name="tipo">
+                        <option th:each="receita : ${receitas}" th:value="${receita.id}" th:text="${receita.description}"></option>
+                        <option th:each="despesa : ${despesas}" th:value="-${despesa.id}" th:text="${despesa.description}"></option>
+                    </select>
+                </div>
+                <div class="button-container-end">
+                    <button type="submit">Salvar</button>
+                </div>
+            </form>
+            <div class="button-container-start">
+                <button onclick="window.location.href = 'home.html'">
+                    &larr; Retorne ao Home
+                </button>
+            </div>
+        </div>
+        <script>
+            document.getElementById("formReceita").addEventListener("submit", function (event) {
+                event.preventDefault();
+                let descricao = document.getElementById("receitaDescricao").value;
+
+                fetch("/lancamentos/tipoReceita", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({description: descricao})
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            let select = document.getElementById("tipo");
+                            let option = document.createElement("option");
+                            option.value = data.id;
+                            option.textContent = data.description;
+                            select.appendChild(option);
+                            document.getElementById("receitaDescricao").value = ""; // Clear input
+                        });
+            });
+
+            document.getElementById("formDespesa").addEventListener("submit", function (event) {
+                event.preventDefault();
+                let descricao = document.getElementById("despesaDescricao").value;
+
+                fetch("/lancamentos/tipoDespesa", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({description: descricao})
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            let select = document.getElementById("tipo");
+                            let option = document.createElement("option");
+                            option.value = -data.id;
+                            option.textContent = data.description;
+                            select.appendChild(option);
+                            document.getElementById("despesaDescricao").value = ""; // Clear input
+                        });
+            });
+        </script>
+    </body>
 </html>

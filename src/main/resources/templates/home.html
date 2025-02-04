@@ -4,15 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="css/teste.css" />
   </head>
   <body>
     <div class="container">
         <div class="button-container-start">
-            <button onclick="window.location.href='home.html'">
-              &larr; Retorne ao Login
-            </button>
+            <a href="/login"> &larr; Retorne ao Login</a>
         </div>
       <h2>Lucros e Despesas</h2>
       <table>
@@ -25,27 +22,9 @@
           </tr>
         </thead>
         <tbody id="tableLancamentos">
-          <tr class="lucro">
-            <td>Salário</td>
-            <td>$3000</td>
-            <td>Sim</td>
-            <td>Não</td>
-            <td>
-              <a href="deletar" class="entry-buttons" id="deleteEntry"
-                >deletar</a
-              >
-            </td>
-            <td>
-              <a href="alterar" class="entry-buttons" id="deleteEntry"
-                >alterar</a
-              >
-            </td>
-          </tr>
-          <tr class="despesa">
-            <td>Aluguel</td>
-            <td>$1200</td>
-            <td>Não</td>
-            <td>Sim</td>
+          <tr th:each="lancamentos : ${lancamentos}">
+            <td th:text="${lancamentos.amount}"></td>
+            <td th:text="${lancamentos.tipoReceita != null ? movement.tipoReceita.description : movement.tipoDespesa.description}"></td>
             <td>
               <a href="deletar" class="entry-buttons" id="deleteEntry"
                 >deletar</a
@@ -59,15 +38,13 @@
           </tr>
         </tbody>
       </table>
-      <p><strong>Total Lucro:</strong> <span id="totalLucro">$3000</span></p>
+      <p><strong>Total Lucro:</strong> <span id="totalLucro">A implementar</span></p>
       <p>
-        <strong>Total Despesa:</strong> <span id="totalDespesa">$1200</span>
+        <strong>Total Despesa:</strong> <span id="totalDespesa">A implementar</span>
       </p>
-      <button onclick="window.location.href='cadastroLancamento.html'">
-        NOVO LANÇAMENTO
-      </button>
     </div>
-
+      
+ <a href="/cadastroLancamento">NOVO LANÇAMENTO</a>
     <script>
       /* function updateTotals() {
             let earnings = 0, losses = 0;
@@ -81,6 +58,5 @@
         }
         updateTotals(); */
     </script>
-    <script src="script.js"></script>
   </body>
 </html>
