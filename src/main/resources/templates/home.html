@@ -1,62 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
-    <link rel="stylesheet" href="css/teste.css" />
-  </head>
-  <body>
-    <div class="container">
-        <div class="button-container-start">
-            <a href="/login"> &larr; Retorne ao Login</a>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home</title>
+        <link rel="stylesheet" href="css/stylesupdated.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="button-container-start">
+                <a href="/login" id="aButtonStart"> &larr; Retorne ao Login</a>
+            </div>
+            <h2>Lucros e Despesas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tableLancamentos">
+                    <tr th:each="lancamento : ${lancamentos}" th:id="'row-' + ${lancamento.id}">
+                        <td>
+                            <span th:if="${lancamento.tipoReceita != null}" th:text="${lancamento.tipoReceita.descricao}"></span>
+                            <span th:if="${lancamento.tipoDespesa != null}" th:text="${lancamento.tipoDespesa.descricao}"></span>            
+                        </td>
+                        <td class="valor" th:text="${lancamento.valor}"></td>
+                        <td class="tipo">
+                            <span th:if="${lancamento.tipoReceita != null}" th:text="'Receita'"></span>
+                            <span th:if="${lancamento.tipoDespesa != null}" th:text="'Despesa'"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/cadastroLancamento(idLancamento=${lancamento.id})}">
+                                <button type="button">Alterar</button>
+                            </a>
+                            <button onclick="deletarLancamento(this)" th:data-id="${lancamento.id}">Deletar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Total Receita: <span id="totalReceitas">0</span></p>
+            <p>Total Despesa <span id="totalDespesas">0</span></p>
+
+            <a href="/cadastroLancamento" id="aButton">NOVO LANÇAMENTO</a>
         </div>
-      <h2>Lucros e Despesas</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Lucro</th>
-            <th>Despesa</th>
-          </tr>
-        </thead>
-        <tbody id="tableLancamentos">
-          <tr th:each="lancamentos : ${lancamentos}">
-            <td th:text="${lancamentos.amount}"></td>
-            <td th:text="${lancamentos.tipoReceita != null ? movement.tipoReceita.description : movement.tipoDespesa.description}"></td>
-            <td>
-              <a href="deletar" class="entry-buttons" id="deleteEntry"
-                >deletar</a
-              >
-            </td>
-            <td>
-              <a href="alterar" class="entry-buttons" id="deleteEntry"
-                >alterar</a
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p><strong>Total Lucro:</strong> <span id="totalLucro">A implementar</span></p>
-      <p>
-        <strong>Total Despesa:</strong> <span id="totalDespesa">A implementar</span>
-      </p>
-    </div>
-      
- <a href="/cadastroLancamento">NOVO LANÇAMENTO</a>
-    <script>
-      /* function updateTotals() {
-            let earnings = 0, losses = 0;
-            document.querySelectorAll('#dataTable tr').forEach(row => {
-                const amount = parseFloat(row.children[1]?.innerText.replace('$', '')) || 0;
-                if (row.classList.contains('earning')) earnings += amount;
-                if (row.classList.contains('loss')) losses += amount;
-            });
-            document.getElementById('totalEarnings').innerText = `$${earnings}`;
-            document.getElementById('totalLosses').innerText = `$${losses}`;
-        }
-        updateTotals(); */
-    </script>
-  </body>
+
+        <script>
+            function deletarLancamento(button) {
+                const lancamentoId = button.getAttribute("data-id");
+                let confirmDelete = confirm("Tem certeza que deseja deletar o lançamento?");
+                if (confirmDelete) {
+                    fetch(`/lancamentos/${lancamentoId}`, {
+                        method: "DELETE"
+                    }).then(response => {
+                        if (response.ok) {
+                            document.getElementById("row-" + lancamentoId).remove();
+                            calcularTotals();
+                        } else {
+                            alert("Falha ao deletar");
+                        }
+                    })
+                            .catch(error => console.error("Error:", error));
+                }
+            }
+            function calcularTotals() {
+                let totalReceitas = 0;
+                let totalDespesas = 0;
+
+                document.querySelectorAll("#tableLancamentos tr").forEach(row => {
+                    let valor = parseFloat(row.querySelector(".valor").innerText);
+                    let tipo = row.querySelector(".tipo").innerText.trim();
+
+                    if (tipo === "Receita") {
+                        totalReceitas += valor;
+                    } else if (tipo === "Despesa") {
+                        totalDespesas += valor;
+                    }
+                });
+
+                document.getElementById("totalReceitas").innerText = totalReceitas.toFixed(2);
+                document.getElementById("totalDespesas").innerText = totalDespesas.toFixed(2);
+            }
+
+            // Run calculation when page loads
+            document.addEventListener("DOMContentLoaded", calcularTotals);
+        </script>
+    </body>
 </html>

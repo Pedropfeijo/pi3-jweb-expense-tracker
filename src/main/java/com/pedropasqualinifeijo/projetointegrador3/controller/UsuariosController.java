@@ -6,6 +6,7 @@ package com.pedropasqualinifeijo.projetointegrador3.controller;
 
 import com.pedropasqualinifeijo.projetointegrador3.model.Usuarios;
 import com.pedropasqualinifeijo.projetointegrador3.repository.UsuariosRepository;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,15 +28,22 @@ public class UsuariosController {
     private UsuariosRepository userRepository;
 
     @PostMapping("/login")
-    public String login(@RequestParam String nome, @RequestParam String senha) {
-        Optional<Usuarios> user = userRepository.findByNome(nome);
-        if (user.isEmpty()) {
-            Usuarios novoUsuario = new Usuarios();
-            novoUsuario.setNome(nome);
-            novoUsuario.setSenha(senha);
-            userRepository.save(novoUsuario);
-        }
-        return "home";
-    }
-}
+    public String login(@RequestParam String nome, @RequestParam String senha, HttpSession session) {
 
+        Optional<Usuarios> usuario = userRepository.findByNome(nome);
+
+        Usuarios loggedInUser;
+        if (usuario.isEmpty()) {
+            loggedInUser = new Usuarios();
+            loggedInUser.setNome(nome);
+            loggedInUser.setSenha(senha);
+            userRepository.save(loggedInUser);
+        } else {
+            loggedInUser = usuario.get();
+        }
+
+        session.setAttribute("idUsuario", loggedInUser.getId()); 
+        return "redirect:/home";
+    }
+
+}

@@ -4,14 +4,14 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Novo Lançamento</title>
-        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/stylesupdated.css" />
     </head>
     <body>
-
+<div class="container">
         <h3>Adicione novo tipo de receita</h3>
 
         <form id="formReceita" th:action="@{/adicionarTipoReceita}" method="post">
-            <input type="text" id="receitaDescricao" placeholder="Descrição da receita aqui" required>
+            <input type="text" id="descricao" name="descricao" placeholder="Descrição da receita aqui" required>
             <button type="submit">Adicionar</button>
         </form>
 
@@ -19,77 +19,33 @@
         <h3>Adicione novo tipo de despesa</h3>
 
         <form id="formDespesa" th:action="@{/adicionarTipoDespesa}" method="post">
-            <input type="text" id="despesaDescricao" placeholder="Descrição da despesa aqui" required>
+            <input type="text" id="descricao" name="descricao" placeholder="Descrição da despesa aqui" required>
             <button type="submit">Adicionar</button>
         </form>
-        <div class="container">
+      
             <h2>Detalhes do Lançamento</h2>
             <form id="entryForm" th:action="@{/salvarLancamento}" method="post">
+                <input type="hidden" id="id" name="id" th:value="${lancamento.id}" />
+                <input type="hidden" id="idUsuario" name="idUsuario" th:value="${idUsuario}" />
                 <div class="input-group">
                     <label for="valor">Valor:</label>
-                    <input type="number" id="valor" name="valor" required />
+                    <input type="number" id="valor" name="valor" th:value="${lancamento.valor}" required />
                 </div>
                 <div class="input-group">
                     <label for="tipo">Tipo:</label>
                     <select id="tipo" name="tipo">
-                        <option th:each="receita : ${receitas}" th:value="${receita.id}" th:text="${receita.description}"></option>
-                        <option th:each="despesa : ${despesas}" th:value="-${despesa.id}" th:text="${despesa.description}"></option>
+                        <option th:each="receita : ${receitas}" th:value="${receita.id}" th:text="${receita.descricao}" th:selected="${lancamento.tipoReceita != null && lancamento.tipoReceita.id == receita.id}"></option>
+                        <option th:each="despesa : ${despesas}" th:value="-${despesa.id}" th:text="${despesa.descricao}" th:selected="${lancamento.tipoDespesa != null && lancamento.tipoDespesa.id == despesa.id}"></option>
                     </select>
                 </div>
                 <div class="button-container-end">
                     <button type="submit">Salvar</button>
                 </div>
             </form>
-            <div class="button-container-start">
-                <button onclick="window.location.href = 'home.html'">
-                    &larr; Retorne ao Home
-                </button>
-            </div>
+            <a href="/home" id="aButtonStart"> &larr; Retorne ao home</a>
         </div>
         <script>
-            document.getElementById("formReceita").addEventListener("submit", function (event) {
-                event.preventDefault();
-                let descricao = document.getElementById("receitaDescricao").value;
-
-                fetch("/lancamentos/tipoReceita", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({description: descricao})
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            let select = document.getElementById("tipo");
-                            let option = document.createElement("option");
-                            option.value = data.id;
-                            option.textContent = data.description;
-                            select.appendChild(option);
-                            document.getElementById("receitaDescricao").value = ""; // Clear input
-                        });
-            });
-
-            document.getElementById("formDespesa").addEventListener("submit", function (event) {
-                event.preventDefault();
-                let descricao = document.getElementById("despesaDescricao").value;
-
-                fetch("/lancamentos/tipoDespesa", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({description: descricao})
-                })
-                        .then(response => response.json())
-                        .then(data => {
-                            let select = document.getElementById("tipo");
-                            let option = document.createElement("option");
-                            option.value = -data.id;
-                            option.textContent = data.description;
-                            select.appendChild(option);
-                            document.getElementById("despesaDescricao").value = ""; // Clear input
-                        });
-            });
+            
         </script>
     </body>
 </html>
